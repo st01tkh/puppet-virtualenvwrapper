@@ -2,6 +2,41 @@ virtualenvwrapper
 
 This is puppet module to setup and configure the virtualenvwrapper.
 
+Usage
+-----
+
+Example 1
+
+virtualenvwrapper::user {"vagrant": }
+
+Creates '/home/vagrant/venvs' dir.
+Adds 'export WORKON=/home/vagrant/venvs' to '/home/vagrant/.bashrc' file.
+
+
+Example 2
+
+virtualenvwrapper::user {"vagrant": 
+  envs_dir_rel_path => '.virtualenvs',
+}
+
+Creates '/home/vagrant/.virtualenvs' dir.
+Adds 'export WORKON=/home/vagrant/.virtualenvs' to '/home/vagrant/.bashrc' file.
+
+
+Example 3
+
+$user = 'vagrant'
+virtualenvwrapper::user {"special virtualenvwrapper for $user":
+  user => $user,
+  envs_dir_rel_path => '.virtualenvs',
+  envs_dir_full_path => '/tmp/fullpath'
+}
+
+Creates '/tmp/fullpath' dir.
+Adds 'export WORKON=/tmp/fullpath' to '/home/vagrant/.bashrc' file.
+Param 'ens_dir_rel_path' is ignored if 'encs_dir_full_path' specified.
+
+
 License
 -------
 
@@ -9,6 +44,12 @@ License
 Contact
 -------
 st01tkh@gmail.com
+
+Limitations
+-----------
+
+This module was tested only on linux (Ubuntu Trusty).
+This module depends on stankevich/puppet puppet module that supports only Unix system yet.
 
 
 Support
