@@ -34,7 +34,7 @@ virtualenvwrapper::user {"special virtualenvwrapper for $user":
 
 Creates '/tmp/fullpath' dir.
 Adds 'export WORKON=/tmp/fullpath' to '/home/vagrant/.bashrc' file.
-Param 'ens_dir_rel_path' is ignored if 'encs_dir_full_path' specified.
+Parameter 'envs_dir_rel_path' is ignored if 'envs_dir_full_path' is specified.
 
 
 License
