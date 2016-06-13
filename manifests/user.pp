@@ -38,11 +38,13 @@ define virtualenvwrapper::user(
     $_envs_dir_full_path = $envs_dir_full_path
   }
   $_user_bashrc_path = "${user_home_dir}/.bashrc"
+  $virtualenvwrapper = find_virtualenvwrapper()
   file {"${_envs_dir_full_path}": ensure => directory, } ->
   file { "${_user_bashrc_path}": ensure => present } ->
   file_line { "add_workon_to_${_user_bashrc_path}": 
     path => "${_user_bashrc_path}",
     ensure => present,
     line => "export WORKON_HOME=${_envs_dir_full_path}",
-  }
+  } ->
+  virtualenvwrapper::add_virtualenvwrapper{"${_user_bashrc_path}": }
 }
