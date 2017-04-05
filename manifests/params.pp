@@ -9,11 +9,11 @@ class virtualenvwrapper::params {
   $envs_dir_full_path = "${user_home_dir}/${envs_dir_rel_path}"
 
   case $::kernel {
-    Darwin: {
+    'Darwin': {
     }
-    windows: {
+    'windows': {
     }
-    default: {
+    'default': {
     }
   }
 }
