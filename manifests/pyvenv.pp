@@ -11,7 +11,7 @@ define virtualenvwrapper::pyvenv(
 ) {
 
   case $os['distro']['id'] {
-    'Ubuntu': {
+    /Ubuntu|Debian/: {
       if ( !defined(Package["python3-venv"]) ) {
         package {"python3-venv": ensure => installed }
       }
