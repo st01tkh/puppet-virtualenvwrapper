@@ -14,7 +14,8 @@
 define virtualenvwrapper::user(
   $user           = undef, #$::id,
   $envs_dir_rel_path = undef, #'venvs',
-  $envs_dir_full_path = undef
+  $envs_dir_full_path = undef,
+  $use_home_var = true
 ) {
   include virtualenvwrapper::params
   if ($user == undef) {
@@ -29,17 +30,29 @@ define virtualenvwrapper::user(
     $_user = $user
   }
   if ($envs_dir_rel_path  == undef) {
-     $envs_dir_rel_path = virtualenvwrapper::params::envs_dir_rel_path
+     $_envs_dir_rel_path = virtualenvwrapper::params::envs_dir_rel_path
+  } else {
+     $_envs_dir_rel_path = $envs_dir_rel_path
+  }
+  if ($use_home_var == undef) {
+     $_use_home_var = virtualenvwrapper::params::use_home_var
+  } else {
+     $_use_home_var = $use_home_var
   }
   $user_home_dir = get_user_home_dir($_user)
   if ($envs_dir_full_path  == undef) {
-    $_envs_dir_full_path = "${user_home_dir}/${envs_dir_rel_path}"
+    if ($_use_home_var) {
+      $_envs_dir_full_path = "\$HOME/${_envs_dir_rel_path}"
+    } else {
+      $_envs_dir_full_path = "${user_home_dir}/${_envs_dir_rel_path}"
+    }
   } else {
     $_envs_dir_full_path = $envs_dir_full_path
   }
   $_user_bashrc_path = "${user_home_dir}/.bashrc"
   $virtualenvwrapper = find_virtualenvwrapper()
-  file {"${_envs_dir_full_path}": ensure => directory, } ->
+  file {"${_envs_dir_full_path}": ensure => directory,
+                                  onlyif => !$_use_home_var } ->
   file { "${_user_bashrc_path}": ensure => present } ->
   file_line { "add_workon_to_${_user_bashrc_path}": 
     path => "${_user_bashrc_path}",
