@@ -23,15 +23,11 @@
 class virtualenvwrapper ( $python_version = undef ){
   include virtualenvwrapper::params
   case $::kernel {
-    Darwin: {
-    }
-    windows: {
-    }
-    linux: {
-      python::pip {'virtualenvwrapper': }
+    /Darwin,windows/: {
+      notify {"virtualenvwrapper puppet module doesn't support $::kernel yet": }
     }
     default: {
-      notify {"virtualenvwrapper puppet module doesn't support $::kernel yet": }
+      python::pip {'virtualenvwrapper': }
     }
   }
 }
