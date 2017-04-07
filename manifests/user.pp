@@ -51,8 +51,9 @@ define virtualenvwrapper::user(
   }
   $_user_bashrc_path = "${user_home_dir}/.bashrc"
   $virtualenvwrapper = find_virtualenvwrapper()
-  file {"${_envs_dir_full_path}": ensure => directory,
-                                  onlyif => !$_use_home_var } ->
+  if (!$_use_home_var) {
+    file { "${_envs_dir_full_path}": ensure => directory }
+  }
   file { "${_user_bashrc_path}": ensure => present } ->
   file_line { "add_workon_to_${_user_bashrc_path}": 
     path => "${_user_bashrc_path}",
