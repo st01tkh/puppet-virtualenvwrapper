@@ -39,8 +39,18 @@ define virtualenvwrapper::user(
   } else {
      $_use_home_var = $use_home_var
   }
-  $user_home_dir = get_user_home_dir($_user)
-  if ($envs_dir_full_path  == undef) {
+  $home = "home_${_user}"
+  $user_home_dir = inline_template("<%= scope.lookupvar('::$home') %>")
+  $user_uid = inline_template("<%= scope.lookupvar('::$uid') %>")
+  if ( $user_uid == "" ) {
+    $user_exists = false
+  } else {
+    $user_exists = true
+  }
+  if (!$user_exists) {
+    fail("User ${_user} doesn't exist")
+  }
+  if ($envs_dir_full_path == undef) {
     if ($_use_home_var) {
       $_envs_dir_full_path = "\$HOME/${_envs_dir_rel_path}"
     } else {
@@ -50,7 +60,6 @@ define virtualenvwrapper::user(
     $_envs_dir_full_path = $envs_dir_full_path
   }
   $_user_bashrc_path = "${user_home_dir}/.bashrc"
-  $virtualenvwrapper = find_virtualenvwrapper()
   if (!$_use_home_var) {
     file { "${_envs_dir_full_path}": ensure => directory }
   }
