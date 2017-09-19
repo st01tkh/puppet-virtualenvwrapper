@@ -1,4 +1,5 @@
-$user = 'talex_id'
-virtualenvwrapper::user {"$user": 
+$user = 'user01'
+virtualenvwrapper::user {"$user venvs": 
+  user => $user,
   envs_dir_rel_path => 'venvs',
 }

@@ -12,23 +12,20 @@
 #   systems (current user is assumed).
 #
 define virtualenvwrapper::user(
-  $user           = undef, #$::id,
+  $user           = $::id,
+  $homedir_path = undef,
   $envs_dir_rel_path = undef, #'venvs',
-  $envs_dir_full_path = undef,
   $use_home_var = true
 ) {
   include virtualenvwrapper::params
-  if ($user == undef) {
-    if (check_user_exists($title)) {
-      $_user = $title
-    } else {
-      if (check_if_single_word($title)) {
-        fail("User $title doesn't exist")
-      }
-    }
-  } else {
-    $_user = $user
+
+  homedir::file {"$user:~/$envs_dir_rel_path virtualenvwrapper":
+    user => $user,
+    homedir_path => $homedir_path,
+    ensure => directory,
+    rel_path => $envs_dir_rel_path, 
   }
+
   if ($envs_dir_rel_path  == undef) {
      $_envs_dir_rel_path = virtualenvwrapper::params::envs_dir_rel_path
   } else {
@@ -39,35 +36,36 @@ define virtualenvwrapper::user(
   } else {
      $_use_home_var = $use_home_var
   }
-  $home = "home_${_user}"
-  $user_home_dir = inline_template("<%= scope.lookupvar('::$home') %>")
-  $user_uid = inline_template("<%= scope.lookupvar('::$uid') %>")
-  if ( $user_uid == "" ) {
-    $user_exists = false
-  } else {
-    $user_exists = true
-  }
-  if (!$user_exists) {
-    fail("User ${_user} doesn't exist")
-  }
-  if ($envs_dir_full_path == undef) {
-    if ($_use_home_var) {
-      $_envs_dir_full_path = "\$HOME/${_envs_dir_rel_path}"
-    } else {
-      $_envs_dir_full_path = "${user_home_dir}/${_envs_dir_rel_path}"
+
+  if $homedir_path {
+    $homedir_path_real = $homedir_path
+  } elsif $user == 'root' {
+    $homedir_path_real = $::osfamily ? {
+      'Solaris' => '/',
+      default   => '/root',
     }
   } else {
-    $_envs_dir_full_path = $envs_dir_full_path
+    $homedir_path_real = $::osfamily ? {
+      'Solaris' => "/export/home/${user}",
+      default   => "/home/${user}",
+    }
   }
-  $_user_bashrc_path = "${user_home_dir}/.bashrc"
-  if (!$_use_home_var) {
-    file { "${_envs_dir_full_path}": ensure => directory }
+
+  if ($_use_home_var) {
+    $_envs_dir_full_path = "\$HOME/${_envs_dir_rel_path}"
+  } else {
+    $_envs_dir_full_path = "${homedir_path_real}/${_envs_dir_rel_path}"
   }
-  file { "${_user_bashrc_path}": ensure => present } ->
-  file_line { "add_workon_to_${_user_bashrc_path}": 
-    path => "${_user_bashrc_path}",
-    ensure => present,
+
+  homedir::file_line {"$user:~/.bashrc virtualenvwrapper":
+    user => $user,
+    homedir_path => $homedir_path,
+    rel_path => ".bashrc",
     line => "export WORKON_HOME=${_envs_dir_full_path}",
-  } ->
-  virtualenvwrapper::add_virtualenvwrapper{"${_user_bashrc_path}": }
+    line_ensure => present,
+  }
 }
+
+#
+# vim: tabstop=2 shiftwidth=2 expandtab
+# 

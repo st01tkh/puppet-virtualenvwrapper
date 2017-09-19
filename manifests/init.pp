@@ -20,8 +20,9 @@
 #
 # Copyright 2016 st01tkh
 #
-class virtualenvwrapper ( $python_version = undef ){
-  include virtualenvwrapper::params
+class virtualenvwrapper ( $python_version = undef
+) inherits virtualenvwrapper::params
+{
   case $::kernel {
     /Darwin,windows/: {
       notify {"virtualenvwrapper puppet module doesn't support $::kernel yet": }

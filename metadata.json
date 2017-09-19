@@ -1,6 +1,6 @@
 {
   "name": "tkh-virtualenvwrapper",
-  "version": "0.0.3",
+  "version": "0.1.3",
   "author": "st01tkh",
   "summary": "Setup of virtualenvwrapper",
   "license": "Apache 2.0",
@@ -10,6 +10,7 @@
   "dependencies": [
     {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"},
     {"name":"tkh-tkhlib","version_requirement":">= 0.1.1"},
+    {"name":"tkh-homedir","version_requirement":">= 0.1.1"},
     {"name":"stankevich-python","version_requirement":">= 1.12.0"}
   ]
 }
