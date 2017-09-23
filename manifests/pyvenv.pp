@@ -61,3 +61,7 @@ define virtualenvwrapper::pyvenv(
     file { "$_source_path": ensure => link , target => "$__target_path" }
   }
 }
+
+#
+# vim: tabstop=2 shiftwidth=2 expandtab
+# 
