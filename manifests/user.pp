@@ -78,7 +78,6 @@ define virtualenvwrapper::user(
           })
         }
         'Debian', 'Ubuntu' : {
-          notify {"HEEEEEE": }
           ensure_packages(['virtualenvwrapper'], {
             'provider' => 'pip',
             'ensure' => 'present',
