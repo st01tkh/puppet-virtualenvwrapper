@@ -15,8 +15,10 @@ class virtualenvwrapper::params {
   }
   case $os['distro']['id'] {
     /Ubuntu|Debian/: {
-      $loader_path = "/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
-      $lazy_loader_path = "/usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh"
+        #$loader_path = "/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+        #$lazy_loader_path = "/usr/share/virtualenvwrapper/virtualenvwrapper_lazy.sh"
+      $loader_path = "/usr/local/bin/virtualenvwrapper.sh"
+      $lazy_loader_path = "/usr/local/bin/virtualenvwrapper_lazy.sh"
     }
     default: {
       $loader_path = "/usr/local/bin/virtualenvwrapper.sh"

@@ -73,11 +73,14 @@ define virtualenvwrapper::user(
       case $facts['os']['family'] {
         'RedHat', 'Amazon' : {
           ensure_packages(['virtualenvwrapper'], {
-            'ensure' => 'present',
+            'provider' => 'pip',
+            'ensure'   => 'present',
           })
         }
         'Debian', 'Ubuntu' : {
+          notify {"HEEEEEE": }
           ensure_packages(['virtualenvwrapper'], {
+            'provider' => 'pip',
             'ensure' => 'present',
           })
         }
