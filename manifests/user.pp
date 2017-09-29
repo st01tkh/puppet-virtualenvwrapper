@@ -68,6 +68,26 @@ define virtualenvwrapper::user(
     }
   }
 
+  case $facts['kernel'] {
+    'Linux' : {
+      case $facts['os']['family'] {
+        'RedHat', 'Amazon' : {
+          ensure_packages(['virtualenvwrapper'], {
+            'ensure' => 'present',
+          })
+        }
+        'Debian', 'Ubuntu' : {
+          ensure_packages(['virtualenvwrapper'], {
+            'ensure' => 'present',
+          })
+        }
+      }
+    }
+    default : {
+      fail ("unsupported platform ${$facts['os']['name']}")
+    }
+  }
+
   if $envs_dir_full_path == undef {
     if ($_use_home_var) {
       $_envs_dir_full_path = "\$HOME/${_envs_dir_rel_path}"
